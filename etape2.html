@@ -1,1 +1,99 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Étape 2 – Production d’hydrogène</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Étape 2 – Production d’hydrogène</h1>
+
+  <p>
+    Cette étape permet de définir l’impact environnemental de la méthode de production d’hydrogène.  
+    Vous pouvez choisir entre électrolyse, vaporeformage ou oxydation d’hydrocarbures.  
+    Les valeurs par défaut proviennent de notre mémoire, mais vous pouvez les modifier manuellement.
+  </p>
+
+  <form id="formEtape2">
+    <label>Méthode de production :</label><br>
+    <select id="methode" required>
+      <option value="electrolyse">Électrolyse</option>
+      <option value="vaporeformage">Vaporeformage</option>
+      <option value="oxydation">Oxydation d’hydrocarbures</option>
+    </select><br><br>
+
+    <div id="captage-container" style="display:none;">
+      <label><input type="checkbox" id="captage"> Captage du CO₂</label><br><br>
+    </div>
+
+    <label for="energie">Consommation d’électricité (kWh / kg H₂) :</label><br>
+    <input type="number" step="0.1" id="energie" value="55.8"><br><br>
+
+    <label for="co2">Émissions de CO₂ (kg CO₂ / kg H₂) :</label><br>
+    <input type="number" step="0.1" id="co2" value="0"><br><br>
+
+    <button type="submit">Suivant</button>
+  </form>
+
+  <script>
+    const methodeSelect = document.getElementById('methode');
+    const captageBox = document.getElementById('captage');
+    const captageContainer = document.getElementById('captage-container');
+    const energieInput = document.getElementById('energie');
+    const co2Input = document.getElementById('co2');
+
+    const valeurs = {
+      electrolyse: { energie: 55.8, co2: 0 },
+      vaporeformage: {
+        avec: { energie: 1.6, co2: 2.6 },
+        sans: { energie: 0.8, co2: 11 }
+      },
+      oxydation: {
+        avec: { energie: 1.1, co2: 2.7 },
+        sans: { energie: 0.5, co2: 11 }
+      }
+    };
+
+    function majValeurs() {
+      const methode = methodeSelect.value;
+      if (methode === 'electrolyse') {
+        captageContainer.style.display = 'none';
+        energieInput.value = valeurs.electrolyse.energie;
+        co2Input.value = valeurs.electrolyse.co2;
+      } else {
+        captageContainer.style.display = 'block';
+        const captage = captageBox.checked ? 'avec' : 'sans';
+        energieInput.value = valeurs[methode][captage].energie;
+        co2Input.value = valeurs[methode][captage].co2;
+      }
+    }
+
+    methodeSelect.addEventListener('change', () => {
+      captageBox.checked = false;
+      majValeurs();
+    });
+
+    captageBox.addEventListener('change', majValeurs);
+
+    document.getElementById('formEtape2').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const methode = methodeSelect.value;
+      const captage = methode === 'electrolyse' ? 'non' : (captageBox.checked ? 'oui' : 'non');
+      const energie = parseFloat(energieInput.value);
+      const co2 = parseFloat(co2Input.value);
+
+      localStorage.setItem('etape2_methode', methode);
+      localStorage.setItem('etape2_captage', captage);
+      localStorage.setItem('etape2_energie', energie.toString());
+      localStorage.setItem('etape2_co2', co2.toString());
+
+      window.location.href = 'etape3.html';
+    });
+
+    // Initialisation à l’ouverture de la page
+    majValeurs();
+  </script>
+</body>
+</html>
 
