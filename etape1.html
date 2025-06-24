@@ -1,1 +1,38 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Étape 1 – Construction</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Étape 1 – Construction des infrastructures</h1>
+
+  <p>
+    Cette étape prend en compte l’impact carbone lié à la construction des infrastructures utilisées
+    pour produire de l’hydrogène (usines, électrolyseurs, etc.).<br><br>
+    Dans notre mémoire, nous avons estimé cette empreinte à 
+    <strong>0,045 kg de CO₂ par kilogramme d’hydrogène produit</strong>, 
+    en amortissant la construction sur la durée de vie des installations (20 ans).
+  </p>
+
+  <form id="formEtape1">
+    <label for="co2_construction">Émissions estimées (kg CO₂ / kg H₂) :</label><br>
+    <input type="number" step="0.001" id="co2_construction" value="0.045" required><br><br>
+
+    <button type="submit">Suivant</button>
+  </form>
+
+  <script>
+    document.getElementById('formEtape1').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const valeur = parseFloat(document.getElementById('co2_construction').value);
+      localStorage.setItem('etape1_construction', valeur.toString());
+
+      window.location.href = 'etape2.html';
+    });
+  </script>
+</body>
+</html>
 
