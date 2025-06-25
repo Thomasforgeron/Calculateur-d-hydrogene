@@ -1,1 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Étape 6 – Distribution / Ravitaillement</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Étape 6 – Distribution / Ravitaillement</h1>
+
+  <p>
+    Cette étape permet d’estimer la consommation énergétique nécessaire pour délivrer 1 kg d’hydrogène dans une station.
+    <br><br>
+    Dans notre mémoire :
+    <ul>
+      <li><strong>H₂ liquide</strong> : 0,37 kWh/kg</li>
+      <li><strong>H₂ gazeux</strong> : 2,43 kWh/kg</li>
+    </ul>
+    Ces valeurs sont modifiables selon votre configuration.
+  </p>
+
+  <form id="formEtape6">
+    <label for="etat">Type d’hydrogène distribué :</label><br>
+    <select id="etat" required>
+      <option value="liquide">Liquide</option>
+      <option value="gazeux">Gazeux</option>
+    </select><br><br>
+
+    <label for="energie">Consommation énergétique estimée (kWh/kg H₂) :</label><br>
+    <input type="number" id="energie" step="0.01" value="0.37" required><br><br>
+
+    <button type="submit">Suivant</button>
+  </form>
+
+  <script>
+    const etatSelect = document.getElementById('etat');
+    const energieInput = document.getElementById('energie');
+
+    function updateDefaultValue() {
+      if (etatSelect.v
 
