@@ -1,1 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Résultat final</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Résultat final</h1>
+  <div id="resultat"></div>
+
+  <script>
+    const PCI_H2 = 33.33;
+    let h2 = PCI_H2;
+    let energieTotale = 0;
+    let co2Total = 0;
+
+    let log = [];
+
+    // Étape 8 – Utilisation finale (pertes)
+    const pertes8 = parseFloat(localStorage.getItem('etape8_pertes') || 0);
+    h2 /= (1 - pertes8 / 100);
+    log.push(`<b>Étape 8</b> – Pertes d’utilisation : ${pertes8}% → H₂ = ${h2.toFixed(2)} kWh`);
+
+    // Étape 7 – Conversion en électricité
+    const pertes7 = parseFloat(localStorage.getItem('etape7_pertes') || 0);
+    const consoSuppl7 = parseFloat(localStorage.getItem('etape7_conso') || 0);
+    h2 /= (1 - pertes7 / 100);
+    const conso7 = (h2 / PCI_H2) * consoSuppl7;
+    energieTotale += conso7;
+    log.push(`<b>Étape 7</b> – Pertes conversion : ${pertes7}%, Conso supp : ${consoSuppl7} → +${conso7.toFixed(3)} kWh, H₂ = ${h2.toFixed(2)}`);
+
+    // Étape 6 – Distribution
+    const energie6 = parseFloat(localStorage.getItem('etape6_energie') || 0);
+    const conso6 = (h2 / PCI_H2) * energie6;
+    energieTotale += conso6;
+    log.push(`<b>Étape 6</b> – Distribution (${energie6} kWh/kg) → +${conso6.toFixed(3)} kWh`);
+
+    // Étape 5 – Transport
+    const distance5 = parseFloat(localStorage.getItem('etape5_distance') || 0);
+    const emission5 = parseFloat(localStorage.getItem('etape5_emission') || 0);
+    const co2_5 = (h2 / 1000) * distance5 * emission5 / 1000; // convertit g en kg
+    co2Total += co2_5;
+    log.push(`<b>Étape 5</b> – Transport sur ${distance5} km à ${emission5} gCO₂/t.km → +${(co2_5 * 1000).toFixed(1)} gCO₂`);
+
+    // Étape 4 – Stockage
+    const pertesJour4 = parseFloat(localStorage.getItem('etape4_pertes') || 0);
+    const jours4 = parseInt(localStorage.getItem('etape4_jours') || 0);
+    const consoStock4 = parseFloat(localStorage.getItem('etape4_conso') || 0);
+    const facteurStock = Math.pow(1 - pertesJour4 / 100, jours4);
+    h2 /= facteurStock;
+    const conso4 = (h2 / PCI_H2) * ((consoStock4 / 30) * jours4);
+    energieTotale += conso4;
+    log.push(`<b>Étape 4</b> – Stockage (${pertesJour4}%/j sur ${jours4} j) → +${conso4.toFixed(3)} kWh, H₂ = ${h2.toFixed(2)}`);
+
+    // Étape 3 – Compression / liquéfaction
+    const energie3 = parseFloat(localStorage.getItem('etape3_energie') || 0);
+    const conso3 = (h2 / PCI_H2) * energie3;
+    energieTotale += conso3;
+    log.push(`<b>Étape 3</b> – Compression/liquéfaction (${energie3} kWh/kg) → +${conso3.toFixed(3)} kWh`);
+
+    // Étape 2 – Production
+    const energie2 = parseFloat(localStorage.getItem('etape2_energie') || 0);
+    const co2_kg2 = parseFloat(localStorage.getItem('etape2_co2') || 0);
+    const conso2 = (h2 / PCI_H2) * energie2;
+    const co2_2 = (h2 / PCI_H2) * co2_kg2;
+    energieTotale += conso2;
+    co2Total += co2_2;
+    log.push(`<b>Étape 2</b> – Production → +${conso2.toFixed(2)} kWh, +${co2_2.toFixed(3)} kgCO₂`);
+
+    // Étape 1 – Construction
+    const co2_constr = parseFloat(localStorage.getItem('etape1_construction') || 0);
+    const co2_1 = (h2 / PCI_H2) * co2_constr;
+    co2Total += co2_1;
+    log.push(`<b>Étape 1</b> – Construction → +${co2_1.toFixed(3)} kgCO₂`);
+
+    // Résultat global
+    const couleur = co2Total < 1 ? '🟢 Hydrogène vert' : co2Total < 5 ? '🔵 Hydrogène bleu' : '⚫ Hydrogène gris';
+
+    document.getElementById('resultat').innerHTML = `
+      <p><strong>Hydrogène final visé :</strong> 1 kg (33,33 kWh)</p>
+      <p><strong>Quantité totale produite :</strong> ${h2.toFixed(2)} kg H₂</p>
+      <p><strong>Énergie totale consommée :</strong> ${energieTotale.toFixed(2)} kWh</p>
+      <p><strong>Émissions totales :</strong> ${co2Total.toFixed(3)} kg CO₂</p>
+      <p><strong>Classification :</strong> ${couleur}</p>
+      <hr>
+      ${log.join('<br>')}
+    `;
+  </script>
+</body>
+</html>
 
