@@ -1,1 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Étape 3 – Compression ou liquéfaction</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Étape 3 – Compression ou liquéfaction</h1>
+
+  <p>
+    Cette étape représente la consommation d’électricité nécessaire pour transformer l’hydrogène
+    en un état transportable : gazeux ou liquide.
+    <br><br>
+    Dans notre mémoire :
+    <ul>
+      <li><strong>Compression (gaz)</strong> : 4,9 kWh/kg H₂</li>
+      <li><strong>Liquéfaction (liquide)</strong> : 11,5 kWh/kg H₂</li>
+    </ul>
+    Ces valeurs sont automatiquement proposées, mais vous pouvez les modifier.
+  </p>
+
+  <form id="formEtape3">
+    <label>Forme de stockage :</label><br>
+    <select id="forme" required>
+      <option value="gaz">Gaz comprimé</option>
+      <option value="liquide">Liquide</option>
+    </select><br><br>
+
+    <label for="energie_compression">Consommation d’électricité (kWh / kg H₂) :</label><br>
+    <input type="number" step="0.1" id="energie_compression" value="4.9"><br><br>
+
+    <button type="submit">Suivant</button>
+  </form>
+
+  <script>
+    const forme = document.getElementById('forme');
+    const inputEnergie = document.getElementById('energie_compression');
+
+    const valeurs = {
+      gaz: 4.9,
+      liquide: 11.5
+    };
+
+    forme.addEventListener('change', () => {
+      inputEnergie.value = valeurs[forme.value];
+    });
+
+    document.getElementById('formEtape3').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      localStorage.setItem('etape3_forme', forme.value);
+      localStorage.setItem('etape3_energie', parseFloat(inputEnergie.value).toString());
+
+      window.location.href = 'etape4.html';
+    });
+  </script>
+</body>
+</html>
 
