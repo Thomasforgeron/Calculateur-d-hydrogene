@@ -39,7 +39,7 @@
     // Étape 5 – Transport
     const distance5 = parseFloat(localStorage.getItem('etape5_distance') || 0);
     const emission5 = parseFloat(localStorage.getItem('etape5_emission') || 0);
-    const co2_5 = (h2 / 1000) * distance5 * emission5 / 1000; // convertit g en kg
+    const co2_5 = (h2 / 1000) * distance5 * emission5 / 1000;
     co2Total += co2_5;
     log.push(`<b>Étape 5</b> – Transport sur ${distance5} km à ${emission5} gCO₂/t.km → +${(co2_5 * 1000).toFixed(1)} gCO₂`);
 
@@ -74,19 +74,58 @@
     co2Total += co2_1;
     log.push(`<b>Étape 1</b> – Construction → +${co2_1.toFixed(3)} kgCO₂`);
 
-    // Résultat global
-    const couleur = co2Total < 1 ? '🟢 Hydrogène vert' : co2Total < 5 ? '🔵 Hydrogène bleu' : '⚫ Hydrogène gris';
+    // Sauvegarde pour la page finale
+    localStorage.setItem("energie_totale", energieTotale.toFixed(3));
+    localStorage.setItem("co2_total", co2Total.toFixed(3));
+    localStorage.setItem("h2_total", h2.toFixed(3));
 
+    // Affichage principal
     document.getElementById('resultat').innerHTML = `
       <p><strong>Hydrogène final visé :</strong> 1 kg (33,33 kWh)</p>
       <p><strong>Quantité totale produite :</strong> ${h2.toFixed(2)} kg H₂</p>
       <p><strong>Énergie totale consommée :</strong> ${energieTotale.toFixed(2)} kWh</p>
       <p><strong>Émissions totales :</strong> ${co2Total.toFixed(3)} kg CO₂</p>
-      <p><strong>Classification :</strong> ${couleur}</p>
       <hr>
       ${log.join('<br>')}
     `;
   </script>
+
+  <hr>
+  <h2>Évaluation finale</h2>
+  <p>Connaissez-vous la valeur de l'empreinte carbone (en kgCO₂/kWh) de l’électricité utilisée pour produire votre hydrogène ?</p>
+
+  <button onclick="choixOui()">Oui</button>
+  <button onclick="choixNon()">Non</button>
+
+  <div id="champ_valeur" style="display:none; margin-top:10px;">
+    <label for="valeur_co2">Valeur en kgCO₂/kWh :</label>
+    <input type="number" step="0.001" id="valeur_co2" placeholder="ex : 0.045">
+  </div>
+
+  <br>
+  <button onclick="allerResultatFinal()">Afficher le résultat final</button>
+
+  <script>
+    let choix_utilisateur = null;
+
+    function choixOui() {
+      choix_utilisateur = "oui";
+      document.getElementById("champ_valeur").style.display = "block";
+    }
+
+    function choixNon() {
+      choix_utilisateur = "non";
+      document.getElementById("champ_valeur").style.display = "none";
+    }
+
+    function allerResultatFinal() {
+      localStorage.setItem("emission_kwh_connue", choix_utilisateur);
+      if (choix_utilisateur === "oui") {
+        const valeur = parseFloat(document.getElementById("valeur_co2").value || "0");
+        localStorage.setItem("emission_kwh_valeur", valeur);
+      }
+      window.location.href = "resultat_final.html";
+    }
+  </script>
 </body>
 </html>
-
