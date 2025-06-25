@@ -1,1 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Étape 7 – Conversion en électricité</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Étape 7 – Conversion en électricité</h1>
+
+  <p>
+    Cette étape prend en compte :
+    <ul>
+      <li>les pertes d’hydrogène lors de la conversion en électricité via une pile à combustible,</li>
+      <li>ainsi qu’une consommation énergétique additionnelle selon le type de H₂.</li>
+    </ul>
+    <strong>Valeurs par défaut dans notre mémoire :</strong>
+    <ul>
+      <li>Perte : 50 %</li>
+      <li>Consommation supplémentaire (liquide) : 0,06 kWh/kg</li>
+      <li>Consommation supplémentaire (gazeux) : 0 kWh/kg</li>
+    </ul>
+  </p>
+
+  <form id="formEtape7">
+    <label for="etat">Type d’hydrogène :</label><br>
+    <select id="etat" required>
+      <option value="liquide">Liquide</option>
+      <option value="gazeux">Gazeux</option>
+    </select><br><br>
+
+    <label for="pertes">Pertes estimées de H₂ (% à la conversion) :</label><br>
+    <input type="number" id="pertes" step="1" value="50" required><br><br>
+
+    <label for="conso">Consommation énergétique supplémentaire (kWh/kg H₂) :</label><br>
+    <input type="number" id="conso" step="0.01" value="0.06" required><br><br>
+
+    <button type="submit">Suivant</button>
+  </form>
+
+  <script>
+    const etatSelect = document.getElementById('etat');
+    const pertesInput = document.getElementById('pertes');
+    const consoInput = document.getElementById('conso');
+
+    function updateDefaultValues() {
+      if (etatSelect.value === 'liquide') {
+        pertesInput.value = 50;
+        consoInput.value = 0.06;
+      } else {
+        pertesInput.value = 50;
+        consoInput.value = 0;
+      }
+    }
+
+    etatSelect.addEventListener('change', updateDefaultValues);
+
+    document.getElementById('formEtape7').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const etat = etatSelect.value;
+      const pertes = parseFloat(pertesInput.value);
+      const conso = parseFloat(consoInput.value);
+
+      localStorage.setItem('etape7_etat', etat);
+      localStorage.setItem('etape7_pertes', pertes.toString());
+      localStorage.setItem('etape7_conso', conso.toString());
+
+      window.location.href = 'etape8.html';
+    });
+
+    // Initialiser avec valeurs liquides par défaut
+    updateDefaultValues();
+  </script>
+</body>
+</html>
 
