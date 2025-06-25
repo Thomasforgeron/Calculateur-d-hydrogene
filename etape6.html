@@ -37,5 +37,27 @@
     const energieInput = document.getElementById('energie');
 
     function updateDefaultValue() {
-      if (etatSelect.v
+      if (etatSelect.value === 'liquide') {
+        energieInput.value = '0.37';
+      } else if (etatSelect.value === 'gazeux') {
+        energieInput.value = '2.43';
+      }
+    }
+
+    etatSelect.addEventListener('change', updateDefaultValue);
+
+    document.getElementById('formEtape6').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const etat = etatSelect.value;
+      const energie = parseFloat(energieInput.value);
+
+      localStorage.setItem('etape6_etat', etat);
+      localStorage.setItem('etape6_energie', energie.toString());
+
+      window.location.href = 'etape7.html';
+    });
+  </script>
+</body>
+</html>
 
