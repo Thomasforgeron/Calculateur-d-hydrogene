@@ -1,1 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Étape 8 – Utilisation finale</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Étape 8 – Utilisation finale</h1>
+
+  <p>
+    Cette dernière étape permet d’estimer les pertes d’hydrogène liées à l’utilisation finale, comme :
+    <ul>
+      <li>les pertes de chaleur ou mécaniques dans le moteur,</li>
+      <li>les pertes dans les systèmes de conversion secondaire,</li>
+      <li>ou tout autre phénomène de dissipation.</li>
+    </ul>
+    <strong>Valeur par défaut du mémoire :</strong> 10 %
+  </p>
+
+  <form id="formEtape8">
+    <label for="pertes">Pertes estimées d’hydrogène à l’usage final (% du H₂ restant) :</label><br>
+    <input type="number" id="pertes" step="1" value="10" required><br><br>
+
+    <button type="submit">Voir le résultat</button>
+  </form>
+
+  <script>
+    document.getElementById('formEtape8').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const pertes = parseFloat(document.getElementById('pertes').value);
+      localStorage.setItem('etape8_pertes', pertes.toString());
+
+      window.location.href = 'resultat.html';
+    });
+  </script>
+</body>
+</html>
 
