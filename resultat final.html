@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Résultat final - Empreinte carbone</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    #champ_valeur { display: none; margin-top: 10px; }
+    #resultats_final { margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Évaluation finale de l’hydrogène</h1>
+
+  <p>La réglementation européenne exige qu’un hydrogène soit considéré <strong>vert</strong> si ses émissions sont <strong>inférieures à 3,38 kgCO₂ par kilogramme de H₂</strong>.</p>
+
+  <p>Connaissez-vous la valeur de l’empreinte carbone de l’électricité utilisée (en kgCO₂/kWh) ?</p>
+
+  <button onclick="choixOui()">Oui</button>
+  <button onclick="choixNon()">Non</button>
+
+  <div id="champ_valeur">
+    <label for="valeur_co2">Entrez la valeur :</label>
+    <input type="number" step="0.01" id="valeur_co2" placeholder="ex: 0.04">
+  </div>
+
+  <br>
+  <button onclick="calculer()">Afficher le résultat final</button>
+
+  <div id="resultats_final"></div>
+
+  <script>
+    let choix_utilisateur = null;
+
+    function choixOui() {
+      choix_utilisateur = "oui";
+      document.getElementById("champ_valeur").style.display = "block";
+    }
+
+    function choixNon() {
+      choix_utilisateur = "non";
+      document.getElementById("champ_valeur").style.display = "none";
+    }
+
+    function calculer() {
+      const co2Direct = parseFloat(localStorage.getItem("co2_total") || "0");
+      const energie = parseFloat(localStorage.getItem("energie_total") || "0");
+      const seuilUE = 3.38;
+
+      let message = "";
+      let co2Total = 0;
+
+      if (choix_utilisateur === "oui") {
+        const valeur = parseFloat(document.getElementById("valeur_co2").value || "0");
+        co2Total = co2Direct + (energie * valeur);
+
+        message += `<p><strong>Empreinte totale estimée :</strong> ${co2Total.toFixed(3)} kgCO₂ / kg H₂</p>`;
+
+        if (co2Total <= seuilUE) {
+          message += `<p style="color:green"><strong>✅ Votre hydrogène respecte les normes européennes et est considéré comme vert.</strong></p>`;
+        } else {
+          message += `<p style="color:red"><strong>❌ Votre hydrogène dépasse les 3,38 kgCO₂/kg H₂. Il ne peut pas être considéré comme vert.</strong></p>`;
+        }
+
+      } else if (choix_utilisateur === "non") {
+        const maxCO2parkWh = (seuilUE - co2Direct) / energie;
+
+        if (maxCO2parkWh >= 0) {
+          message += `<p><strong>Pour rester sous le seuil européen de 3,38 kgCO₂/kg H₂ :</strong><br>
+          Votre électricité doit émettre moins de <strong>${maxCO2parkWh.toFixed(3)} kgCO₂/kWh</strong></p>`;
+        } else {
+          message += `<p><strong>Pour respecter la norme, votre électricité doit <span style="color:red">retirer</span> du CO₂ :</strong><br>
+          Elle doit absorber au moins <strong>${Math.abs(maxCO2parkWh).toFixed(3)} kgCO₂/kWh</strong></p>`;
+        }
+
+      } else {
+        message = `<p style="color:red">Veuillez répondre à la question en choisissant "Oui" ou "Non".</p>`;
+      }
+
+      document.getElementById("resultats_final").innerHTML = message;
+    }
+  </script>
+</body>
+</html>
