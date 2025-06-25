@@ -1,1 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Étape 5 – Transport</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Étape 5 – Transport</h1>
+
+  <p>
+    Cette étape permet d’estimer les émissions liées au transport de l’hydrogène entre le lieu de production et la station de ravitaillement.
+    <br><br>
+    Dans notre mémoire :
+    <ul>
+      <li>Distance estimée : <strong>100 km</strong></li>
+      <li>Facteur d’émission : <strong>52 gCO₂/t.km</strong></li>
+    </ul>
+    Ces valeurs peuvent être modifiées ci-dessous si votre configuration est différente.
+  </p>
+
+  <form id="formEtape5">
+    <label for="distance">Distance de transport (en km) :</label><br>
+    <input type="number" step="1" id="distance" value="100" required><br><br>
+
+    <label for="emission">Facteur d’émission (gCO₂ par tonne.km) :</label><br>
+    <input type="number" step="1" id="emission" value="52" required><br><br>
+
+    <button type="submit">Suivant</button>
+  </form>
+
+  <script>
+    document.getElementById('formEtape5').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const distance = parseFloat(document.getElementById('distance').value);
+      const emission = parseFloat(document.getElementById('emission').value);
+
+      localStorage.setItem('etape5_distance', distance.toString());
+      localStorage.setItem('etape5_emission', emission.toString());
+
+      window.location.href = 'etape6.html';
+    });
+  </script>
+</body>
+</html>
 
