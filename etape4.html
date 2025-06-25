@@ -1,1 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Étape 4 – Stockage</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Étape 4 – Stockage</h1>
+
+  <p>
+    Le stockage de l’hydrogène peut être réalisé sous forme gazeuse ou liquide.  
+    Cette étape prend en compte les pertes estimées (fuites) et la consommation électrique additionnelle pour maintenir le stockage.  
+    <br><br>
+    <strong>Valeurs par défaut du mémoire :</strong>
+    <ul>
+      <li><strong>Gaz :</strong> 0,1 %/jour, 4 jours, 0 kWh/mois</li>
+      <li><strong>Liquide :</strong> 0,6 %/jour, 6 jours, 1,5 kWh/mois</li>
+    </ul>
+  </p>
+
+  <form id="formEtape4">
+    <label>Forme de stockage :</label><br>
+    <select id="formeStockage" required>
+      <option value="gaz">Gaz</option>
+      <option value="liquide">Liquide</option>
+    </select><br><br>
+
+    <label for="pertes">Pertes estimées (% par jour) :</label><br>
+    <input type="number" step="0.01" id="pertes" value="0.1"><br><br>
+
+    <label for="jours">Durée de stockage (en jours) :</label><br>
+    <input type="number" step="1" id="jours" value="4"><br><br>
+
+    <label for="conso">Consommation électrique (kWh / mois) :</label><br>
+    <input type="number" step="0.1" id="conso" value="0"><br><br>
+
+    <button type="submit">Suivant</button>
+  </form>
+
+  <script>
+    const formeSelect = document.getElementById('formeStockage');
+    const pertesInput = document.getElementById('pertes');
+    const joursInput = document.getElementById('jours');
+    const consoInput = document.getElementById('conso');
+
+    const valeurs = {
+      gaz: { pertes: 0.1, jours: 4, conso: 0 },
+      liquide: { pertes: 0.6, jours: 6, conso: 1.5 }
+    };
+
+    function majValeurs() {
+      const type = formeSelect.value;
+      pertesInput.value = valeurs[type].pertes;
+      joursInput.value = valeurs[type].jours;
+      consoInput.value = valeurs[type].conso;
+    }
+
+    formeSelect.addEventListener('change', majValeurs);
+
+    document.getElementById('formEtape4').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      localStorage.setItem('etape4_forme', formeSelect.value);
+      localStorage.setItem('etape4_pertes', parseFloat(pertesInput.value).toString());
+      localStorage.setItem('etape4_jours', parseInt(joursInput.value).toString());
+      localStorage.setItem('etape4_conso', parseFloat(consoInput.value).toString());
+
+      window.location.href = 'etape5.html';
+    });
+
+    // Initialiser avec les valeurs par défaut de gaz
+    majValeurs();
+  </script>
+</body>
+</html>
 
