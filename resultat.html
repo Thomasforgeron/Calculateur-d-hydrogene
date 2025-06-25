@@ -14,7 +14,6 @@
     let h2 = PCI_H2;
     let energieTotale = 0;
     let co2Total = 0;
-
     let log = [];
 
     // Étape 8 – Utilisation finale (pertes)
@@ -22,13 +21,13 @@
     h2 /= (1 - pertes8 / 100);
     log.push(`<b>Étape 8</b> – Pertes d’utilisation : ${pertes8}% → H₂ = ${h2.toFixed(2)} kWh`);
 
-    // Étape 7 – Conversion en électricité
+    // Étape 7 – Conversion
     const pertes7 = parseFloat(localStorage.getItem('etape7_pertes') || 0);
     const consoSuppl7 = parseFloat(localStorage.getItem('etape7_conso') || 0);
     h2 /= (1 - pertes7 / 100);
     const conso7 = (h2 / PCI_H2) * consoSuppl7;
     energieTotale += conso7;
-    log.push(`<b>Étape 7</b> – Pertes conversion : ${pertes7}%, Conso supp : ${consoSuppl7} → +${conso7.toFixed(3)} kWh, H₂ = ${h2.toFixed(2)}`);
+    log.push(`<b>Étape 7</b> – Conversion : ${pertes7}%, Conso supp : ${consoSuppl7} → +${conso7.toFixed(3)} kWh, H₂ = ${h2.toFixed(2)}`);
 
     // Étape 6 – Distribution
     const energie6 = parseFloat(localStorage.getItem('etape6_energie') || 0);
@@ -36,12 +35,12 @@
     energieTotale += conso6;
     log.push(`<b>Étape 6</b> – Distribution (${energie6} kWh/kg) → +${conso6.toFixed(3)} kWh`);
 
-    // Étape 5 – Transport (corrigé)
+    // Étape 5 – Transport
     const distance5 = parseFloat(localStorage.getItem('etape5_distance') || 0);
     const emission5 = parseFloat(localStorage.getItem('etape5_emission') || 0);
     const co2_5 = (emission5 / 1000) * distance5 * (h2 / PCI_H2) / 1000; // en kgCO₂
     co2Total += co2_5;
-    log.push(`<b>Étape 5</b> – Transport sur ${distance5} km à ${emission5} gCO₂/t.km → +${co2_5.toFixed(3)} kgCO₂`);
+    log.push(`<b>Étape 5</b> – Transport : ${distance5} km, ${emission5} gCO₂/t.km → +${co2_5.toFixed(3)} kgCO₂`);
 
     // Étape 4 – Stockage
     const pertesJour4 = parseFloat(localStorage.getItem('etape4_pertes') || 0);
@@ -51,13 +50,13 @@
     h2 /= facteurStock;
     const conso4 = (h2 / PCI_H2) * ((consoStock4 / 30) * jours4);
     energieTotale += conso4;
-    log.push(`<b>Étape 4</b> – Stockage (${pertesJour4}%/j sur ${jours4} j) → +${conso4.toFixed(3)} kWh, H₂ = ${h2.toFixed(2)}`);
+    log.push(`<b>Étape 4</b> – Stockage : ${pertesJour4}%/j × ${jours4} j → +${conso4.toFixed(3)} kWh, H₂ = ${h2.toFixed(2)}`);
 
-    // Étape 3 – Compression / liquéfaction
+    // Étape 3 – Compression
     const energie3 = parseFloat(localStorage.getItem('etape3_energie') || 0);
     const conso3 = (h2 / PCI_H2) * energie3;
     energieTotale += conso3;
-    log.push(`<b>Étape 3</b> – Compression/liquéfaction (${energie3} kWh/kg) → +${conso3.toFixed(3)} kWh`);
+    log.push(`<b>Étape 3</b> – Compression : ${energie3} kWh/kg → +${conso3.toFixed(3)} kWh`);
 
     // Étape 2 – Production
     const energie2 = parseFloat(localStorage.getItem('etape2_energie') || 0);
@@ -74,12 +73,12 @@
     co2Total += co2_1;
     log.push(`<b>Étape 1</b> – Construction → +${co2_1.toFixed(3)} kgCO₂`);
 
-    // Sauvegarde pour la page finale
+    // Sauvegarde
     localStorage.setItem("energie_totale", energieTotale.toFixed(3));
     localStorage.setItem("co2_total", co2Total.toFixed(3));
     localStorage.setItem("h2_total", h2.toFixed(3));
 
-    // Affichage principal
+    // Affichage
     document.getElementById('resultat').innerHTML = `
       <p><strong>Hydrogène final visé :</strong> 1 kg (33,33 kWh)</p>
       <p><strong>Quantité totale produite :</strong> ${h2.toFixed(2)} kg H₂</p>
@@ -99,7 +98,7 @@
 
   <div id="champ_valeur" style="display:none; margin-top:10px;">
     <label for="valeur_co2">Valeur en kgCO₂/kWh :</label>
-    <input type="number" step="0.001" id="valeur_co2" placeholder="ex : 0.045">
+    <input type="number" id="valeur_co2" step="any" placeholder="ex : 0.045">
   </div>
 
   <br>
@@ -119,11 +118,18 @@
     }
 
     function allerResultatFinal() {
+      if (!choix_utilisateur) {
+        alert("Veuillez répondre à la question avant de continuer.");
+        return;
+      }
+
       localStorage.setItem("emission_kwh_connue", choix_utilisateur);
+
       if (choix_utilisateur === "oui") {
         const valeur = parseFloat(document.getElementById("valeur_co2").value || "0");
-        localStorage.setItem("emission_kwh_valeur", valeur);
+        localStorage.setItem("emission_kwh_valeur", valeur.toString());
       }
+
       window.location.href = "resultat_final.html";
     }
   </script>
