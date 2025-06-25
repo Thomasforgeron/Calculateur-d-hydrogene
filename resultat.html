@@ -36,12 +36,12 @@
     energieTotale += conso6;
     log.push(`<b>Étape 6</b> – Distribution (${energie6} kWh/kg) → +${conso6.toFixed(3)} kWh`);
 
-    // Étape 5 – Transport
+    // Étape 5 – Transport (corrigé)
     const distance5 = parseFloat(localStorage.getItem('etape5_distance') || 0);
     const emission5 = parseFloat(localStorage.getItem('etape5_emission') || 0);
-    const co2_5 = (h2 / 1000) * distance5 * emission5 / 1000;
+    const co2_5 = (emission5 / 1000) * distance5 * (h2 / PCI_H2) / 1000; // en kgCO₂
     co2Total += co2_5;
-    log.push(`<b>Étape 5</b> – Transport sur ${distance5} km à ${emission5} gCO₂/t.km → +${(co2_5 * 1000).toFixed(1)} gCO₂`);
+    log.push(`<b>Étape 5</b> – Transport sur ${distance5} km à ${emission5} gCO₂/t.km → +${co2_5.toFixed(3)} kgCO₂`);
 
     // Étape 4 – Stockage
     const pertesJour4 = parseFloat(localStorage.getItem('etape4_pertes') || 0);
@@ -129,3 +129,4 @@
   </script>
 </body>
 </html>
+
