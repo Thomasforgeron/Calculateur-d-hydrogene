@@ -44,7 +44,7 @@
 
     // Étape 4 – Stockage (approximation linéaire)
     const pertesJour4 = parseFloat(localStorage.getItem('etape4_pertes') || 0);
-    const jours4 = parseInt(localStorage.getItem('etape4_jours') || 0);
+    const jours4 = parseFloat(localStorage.getItem('etape4_jours') || 0);
     const consoStock4 = parseFloat(localStorage.getItem('etape4_conso') || 0);
     const perteTotale = pertesJour4 * jours4;
     h2 /= (1 - perteTotale / 100);
