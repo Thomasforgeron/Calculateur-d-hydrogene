@@ -42,15 +42,15 @@
     co2Total += co2_5;
     log.push(`<b>Étape 5</b> – Transport : ${distance5} km, ${emission5} gCO₂/t.km → +${co2_5.toFixed(3)} kgCO₂`);
 
-    // Étape 4 – Stockage
+    // Étape 4 – Stockage (approximation linéaire)
     const pertesJour4 = parseFloat(localStorage.getItem('etape4_pertes') || 0);
     const jours4 = parseInt(localStorage.getItem('etape4_jours') || 0);
     const consoStock4 = parseFloat(localStorage.getItem('etape4_conso') || 0);
-    const facteurStock = Math.pow(1 - pertesJour4 / 100, jours4);
-    h2 /= facteurStock;
+    const perteTotale = pertesJour4 * jours4;
+    h2 /= (1 - perteTotale / 100);
     const conso4 = (h2 / PCI_H2) * ((consoStock4 / 30) * jours4);
     energieTotale += conso4;
-    log.push(`<b>Étape 4</b> – Stockage : ${pertesJour4}%/j × ${jours4} j → +${conso4.toFixed(3)} kWh, H₂ = ${h2.toFixed(2)}`);
+    log.push(`<b>Étape 4</b> – Stockage : ${pertesJour4}%/j × ${jours4} j ≈ ${perteTotale.toFixed(2)}% → +${conso4.toFixed(3)} kWh, H₂ = ${h2.toFixed(2)}`);
 
     // Étape 3 – Compression
     const energie3 = parseFloat(localStorage.getItem('etape3_energie') || 0);
@@ -65,13 +65,13 @@
     const co2_2 = (h2 / PCI_H2) * co2_kg2;
     energieTotale += conso2;
     co2Total += co2_2;
-    log.push(`<b>Étape 2</b> – Production → +${conso2.toFixed(2)} kWh, +${co2_2.toFixed(3)} kgCO₂`);
+    log.push(`<b>Étape 2</b> – Production → +${conso2.toFixed(2)} kWh, +${co2_2.toFixed(3)} kg CO₂`);
 
     // Étape 1 – Construction
     const co2_constr = parseFloat(localStorage.getItem('etape1_construction') || 0);
     const co2_1 = (h2 / PCI_H2) * co2_constr;
     co2Total += co2_1;
-    log.push(`<b>Étape 1</b> – Construction → +${co2_1.toFixed(3)} kgCO₂`);
+    log.push(`<b>Étape 1</b> – Construction → +${co2_1.toFixed(3)} kg CO₂`);
 
     // Sauvegarde
     localStorage.setItem("energie_totale", energieTotale.toFixed(3));
@@ -135,4 +135,3 @@
   </script>
 </body>
 </html>
-
