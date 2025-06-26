@@ -14,7 +14,7 @@
     <br><br>
     <strong>Valeurs par défaut du mémoire :</strong>
     <ul>
-      <li><strong>Gaz :</strong> 0,1 %/jour, 4 jours, 0 kWh/mois</li>
+      <li><strong>Gaz :</strong> 0,1 %/jour, 3,5 jours, 0 kWh/mois</li>
       <li><strong>Liquide :</strong> 0,6 %/jour, 6 jours, 1,5 kWh/mois</li>
     </ul>
   </p>
@@ -30,7 +30,7 @@
     <input type="number" step="any" inputmode="decimal" id="pertes" value="0.1"><br><br>
 
     <label for="jours">Durée de stockage (en jours) :</label><br>
-    <input type="number" step="1" id="jours" value="4"><br><br>
+    <input type="number" step="any" id="jours" value="3.5"><br><br>
 
     <label for="conso">Consommation électrique (kWh / mois) :</label><br>
     <input type="number" step="any" inputmode="decimal" id="conso" value="0"><br><br>
@@ -45,7 +45,7 @@
     const consoInput = document.getElementById('conso');
 
     const valeurs = {
-      gaz: { pertes: 0.1, jours: 4, conso: 0 },
+      gaz: { pertes: 0.1, jours: 3.5, conso: 0 },
       liquide: { pertes: 0.6, jours: 6, conso: 1.5 }
     };
 
